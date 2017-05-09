@@ -54,7 +54,8 @@ var defaultParams = {
   currentProgressStep: null,
   progressStepsDistance: '40px',
   onOpen: null,
-  onClose: null
+  onClose: null,
+  useRejections: true
 };
 
 var swalPrefix = 'swal2-';
@@ -828,7 +829,11 @@ var sweetAlert = function sweetAlert() {
     if (params.timer) {
       modal.timeout = setTimeout(function () {
         sweetAlert.closeModal(params.onClose);
-        reject('timer');
+        if (params.useRejections) {
+          reject('timer');
+        } else {
+          resolve({ dismiss: 'timer' });
+        }
       }, params.timer);
     }
 
@@ -899,7 +904,11 @@ var sweetAlert = function sweetAlert() {
         });
       } else {
         sweetAlert.closeModal(params.onClose);
-        resolve(value);
+        if (params.useRejections) {
+          resolve(value);
+        } else {
+          resolve({ value: value });
+        }
       }
     };
 
@@ -972,7 +981,11 @@ var sweetAlert = function sweetAlert() {
           } else if (targetedCancel && sweetAlert.isVisible()) {
             sweetAlert.disableButtons();
             sweetAlert.closeModal(params.onClose);
-            reject('cancel');
+            if (params.useRejections) {
+              reject('cancel');
+            } else {
+              resolve({ dismiss: 'cancel' });
+            }
           }
           break;
         default:
@@ -990,7 +1003,11 @@ var sweetAlert = function sweetAlert() {
     // Closing modal by close button
     getCloseButton().onclick = function () {
       sweetAlert.closeModal(params.onClose);
-      reject('close');
+      if (params.useRejections) {
+        reject('close');
+      } else {
+        resolve({ dismiss: 'close' });
+      }
     };
 
     // Closing modal by overlay click
@@ -1000,7 +1017,11 @@ var sweetAlert = function sweetAlert() {
       }
       if (params.allowOutsideClick) {
         sweetAlert.closeModal(params.onClose);
-        reject('overlay');
+        if (params.useRejections) {
+          reject('overlay');
+        } else {
+          resolve({ dismiss: 'overlay' });
+        }
       }
     };
 
@@ -1097,7 +1118,11 @@ var sweetAlert = function sweetAlert() {
         // ESC
       } else if (keyCode === 27 && params.allowEscapeKey === true) {
         sweetAlert.closeModal(params.onClose);
-        reject('esc');
+        if (params.useRejections) {
+          reject('esc');
+        } else {
+          resolve({ dismiss: 'esc' });
+        }
       }
     };
 
